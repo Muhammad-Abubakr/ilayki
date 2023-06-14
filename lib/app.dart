@@ -126,7 +126,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             break;
         }
       },
-      builder: (context, state) => state.user == null
+      builder: (context, state) => state.user == null ||
+              userbaseCubit.state.customer == null ||
+              userbaseCubit.state.seller == null
           ? const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),

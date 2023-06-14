@@ -35,7 +35,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     _auth = AuthService();
 
     // =============== Subscribing to Firebase User Stream ================ //
-    _auth.subscribe.listen((element) => add(_UserUpdateEvent(element)));
+    _auth.subscribe.listen((user) => add(_UserUpdateEvent(user)));
 
     // =============== Hooking Handlers ================ //
     // PRIVATE

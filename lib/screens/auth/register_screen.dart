@@ -97,6 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Navigator.of(context).push(
               DialogRoute(
                 context: context,
+                barrierDismissible: false,
                 builder: (context) => Center(
                   child: CircularProgressIndicator(
                     color: Theme.of(context).primaryColor,
