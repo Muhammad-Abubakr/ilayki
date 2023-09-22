@@ -5,9 +5,16 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<User?> get subscribe => _auth.authStateChanges();
+  bool? get isEmailVerified => _auth.currentUser?.emailVerified;
 
-  /* Sign in Anononymously using signInAnonmously provided by FirebaseAuth.instance
-  on successfull sign in return User, otherwise return null; */
+  /* Send email verification link to the user */
+  Future<bool> verifyEmail(User user) async {
+    await user.sendEmailVerification();
+    return true;
+  }
+
+  /* Sign in Anonymously using signInAnonymously provided by FirebaseAuth.instance
+  on successful sign in return User, otherwise return null; */
   Future<User?> signInAnon() async {
     UserCredential cred = await _auth.signInAnonymously();
 
@@ -15,9 +22,10 @@ class AuthService {
   }
 
   /* Sign in with Email and Password */
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
-    UserCredential cred =
-        await _auth.signInWithEmailAndPassword(email: email, password: password);
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
+    UserCredential cred = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
 
     return cred.user;
   }
@@ -30,9 +38,10 @@ class AuthService {
   }
 
   /* register with Email and Password */
-  Future<User?> registerWithEmailAndPassword(String email, String password) async {
-    UserCredential cred =
-        await _auth.createUserWithEmailAndPassword(email: email, password: password);
+  Future<User?> registerWithEmailAndPassword(
+      String email, String password) async {
+    UserCredential cred = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
 
     return cred.user;
   }

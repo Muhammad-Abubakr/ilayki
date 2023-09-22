@@ -16,7 +16,8 @@ class UserOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(UserItems.routeName, arguments: {
+      onTap: () =>
+          Navigator.of(context).pushNamed(UserItems.routeName, arguments: {
         "user": user,
       }),
       child: Card(
@@ -62,7 +63,7 @@ class UserOverview extends StatelessWidget {
               ),
 
               // item name as title
-              title: Text(user.name),
+              title: Text(user.fullName),
 
               // item price as subtitle
               // subtitle: const Text('rating here'),
@@ -72,7 +73,8 @@ class UserOverview extends StatelessWidget {
                 onPressed: () {
                   // go to the chat page, send the two users as arguments, chat will be
                   // intialized there and end there
-                  Navigator.of(context).pushNamed(ChatRoomScreen.routeName, arguments: {
+                  Navigator.of(context)
+                      .pushNamed(ChatRoomScreen.routeName, arguments: {
                     "currentUser": context.read<UserBloc>().state.user!.uid,
                     "itemOwner": user,
                   });

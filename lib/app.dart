@@ -44,7 +44,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void didChangeDependencies() {
     /* Initialize the userbase */
     userbaseCubit = context.watch<UserbaseCubit>();
-    userbaseCubit.initialize();
 
     super.didChangeDependencies();
   }

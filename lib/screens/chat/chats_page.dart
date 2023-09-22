@@ -40,7 +40,8 @@ class ChatsPage extends StatelessWidget {
         User otherUser = getOther(index);
 
         return ListTile(
-          onTap: () => Navigator.of(context).pushNamed(ChatRoomScreen.routeName, arguments: {
+          onTap: () => Navigator.of(context)
+              .pushNamed(ChatRoomScreen.routeName, arguments: {
             "currentUser": myUID,
             "itemOwner": otherUser,
           }),
@@ -52,17 +53,19 @@ class ChatsPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             child: CircleAvatar(
-              backgroundImage: Image.network(otherUser.photoURL, fit: BoxFit.cover).image,
+              backgroundImage:
+                  Image.network(otherUser.photoURL, fit: BoxFit.cover).image,
             ),
           ),
-          title: Text(otherUser.name),
+          title: Text(otherUser.fullName),
           trailing: CircleAvatar(
             radius: 24.r,
             backgroundColor: Theme.of(context).colorScheme.secondary,
             child: CircleAvatar(
               radius: 20.r,
-              backgroundColor:
-                  onlineCubit.isOnline(otherUser.uid) ? Colors.green : Colors.redAccent,
+              backgroundColor: onlineCubit.isOnline(otherUser.uid)
+                  ? Colors.green
+                  : Colors.redAccent,
             ),
           ),
         );

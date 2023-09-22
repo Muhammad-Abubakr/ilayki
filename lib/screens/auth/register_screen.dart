@@ -5,17 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ilayki/screens/auth/email_verification_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../app.dart';
-import '../../blocs/items/items_bloc.dart';
-import '../../blocs/online/online_cubit.dart';
-import '../../blocs/orders/orders_cubit.dart';
-import '../../blocs/requests/requests_cubit.dart';
-import '../../blocs/sales/sales_cubit.dart';
 import '../../blocs/user/user_bloc.dart';
-import '../../blocs/userchat/userchat_cubit.dart';
-import '../../blocs/wares/wares_cubit.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -30,12 +23,17 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   /* Image Picker */
-  XFile? _xFile;
+  XFile? _pfp;
+  XFile? _idCard;
   ImageSource? _imageSource;
   final _imagePicker = ImagePicker();
 
   // Text Field Controllers
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -54,36 +52,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // In case of error
         switch (state.state) {
           case UserStates.registered:
-            /* Initialize the wares */
-            context.read<WaresCubit>().intialize();
-
-            /* Initialize the online users */
-            final onlineCubit = context.read<OnlineCubit>();
-            onlineCubit.initialize();
-            onlineCubit.setOnline();
-
-            /* Initialize the requests for current user */
-            context.read<RequestsCubit>().initialize();
-
-            /* Initialize the orders for current user */
-            context.read<OrdersCubit>().initialize();
-
-            /* Initialize the sales for current user */
-            context.read<SalesCubit>().initialize();
-
-            /* Initialize the user chats */
-            context.read<UserchatCubit>().intialize();
-
-            /* Fetch the Items */
-            context
-                .read<ItemsBloc>()
-                .add(ActivateItemsListener(userBloc: context.read<UserBloc>()));
-
-            // Pop the progress indicator
+            // pop of progress indicator
             Navigator.of(context).pop();
             // and push the screen
-            Navigator.of(context).popAndPushNamed(App.routeName);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                  builder: (context) => const EmailVerificationScreen()),
+            );
             break;
+
           case UserStates.error:
             // In case of error pop the routes (which will contain progress indicator mostly)
             // until login screen and show the snack bar with the error
@@ -135,13 +112,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
 
                   /* Text fields */
-                  /// Email
+                  /// Name
                   SizedBox(height: 172.h),
                   TextField(
                     controller: _nameController,
                     keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                      label: Text(AppLocalizations.of(context)!.displayName),
+                    decoration: const InputDecoration(
+                      label: Text("Full Name"),
                     ),
                   ),
 
@@ -152,6 +129,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       label: Text(AppLocalizations.of(context)!.email),
+                    ),
+                  ),
+
+                  /// Gender
+                  SizedBox(height: 24.h),
+                  TextField(
+                    controller: _genderController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      label: Text("Gender"),
+                    ),
+                  ),
+
+                  /// Phone Number
+                  SizedBox(height: 24.h),
+                  TextField(
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      label: Text("Phone Number"),
+                    ),
+                  ),
+
+                  /// address
+                  SizedBox(height: 24.h),
+                  TextField(
+                    controller: _addressController,
+                    keyboardType: TextInputType.streetAddress,
+                    decoration: const InputDecoration(
+                      label: Text("Address"),
+                    ),
+                  ),
+
+                  /// city
+                  SizedBox(height: 24.h),
+                  TextField(
+                    controller: _cityController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      label: Text("City"),
                     ),
                   ),
 
@@ -183,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 64.0.sp),
                     child: Text(
-                      AppLocalizations.of(context)!.addAnImage,
+                      "Add a Profile Picture",
                       style: TextStyle(fontSize: 64.sp),
                     ),
                   ),
@@ -191,7 +208,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   /* Image Container */
                   GestureDetector(
                     /* image_picker */
-                    onTap: () => _pickImage(),
+                    onTap: () => _pickImage("pfp"),
                     /* Container */
                     child: Container(
                       alignment: Alignment.center,
@@ -202,10 +219,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(24.r)),
                         color: Theme.of(context).primaryColor.withOpacity(0.3),
-                        image: _xFile != null
+                        image: _pfp != null
                             ? DecorationImage(
                                 image: FileImage(
-                                  File(_xFile!.path),
+                                  File(_pfp!.path),
                                 ),
                                 fit: BoxFit.cover,
                               )
@@ -215,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: 128.spMax,
                       height: 128.spMax,
                       /* Picture Update */
-                      child: _xFile == null
+                      child: _pfp == null
                           ? Text(
                               AppLocalizations.of(context)!.tapHereToAddPicture,
                               textAlign: TextAlign.center,
@@ -224,7 +241,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   /* Hint for Changing image after Selection */
-                  if (_xFile != null)
+                  if (_pfp != null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 64.0.sp),
+                      child: Text(
+                        AppLocalizations.of(context)!
+                            .tapOnTheImageAgainToChange,
+                        style: TextStyle(
+                          fontSize: 48.sp,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+
+                  SizedBox(height: 64.h),
+
+                  /* Profile Picture */
+                  /* Title of section for Selecting an Image */
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 64.0.sp),
+                    child: Text(
+                      "Add your ID Card Picture",
+                      style: TextStyle(fontSize: 64.sp),
+                    ),
+                  ),
+
+                  /* Image Container */
+                  GestureDetector(
+                    /* image_picker */
+                    onTap: () => _pickImage("idCard"),
+                    /* Container */
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).primaryColor,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(24.r)),
+                        color: Theme.of(context).primaryColor.withOpacity(0.3),
+                        image: _idCard != null
+                            ? DecorationImage(
+                                image: FileImage(
+                                  File(_idCard!.path),
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      padding: const EdgeInsets.all(1),
+                      width: 128.spMax,
+                      height: 128.spMax,
+                      /* Picture Update */
+                      child: _idCard == null
+                          ? Text(
+                              AppLocalizations.of(context)!.tapHereToAddPicture,
+                              textAlign: TextAlign.center,
+                            )
+                          : null,
+                    ),
+                  ),
+                  /* Hint for Changing image after Selection */
+                  if (_idCard != null)
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 64.0.sp),
                       child: Text(
@@ -255,7 +333,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (_nameController.text.isEmpty ||
                               _emailController.text.isEmpty ||
                               _passwordController.text.isEmpty ||
-                              _xFile == null) {
+                              _genderController.text.isEmpty ||
+                              _addressController.text.isEmpty ||
+                              _phoneNumberController.text.isEmpty ||
+                              _cityController.text.isEmpty ||
+                              _idCard == null ||
+                              _pfp == null) {
                             /* else show the snackbar saying passwords dont match */
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -280,10 +363,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           } else {
                             userBloc.add(
                               RegisterUserWithEmailAndPassword(
-                                displayName: _nameController.text.trim(),
+                                fullName: _nameController.text.trim(),
                                 email: _emailController.text.trim(),
                                 password: _passwordController.text.trim(),
-                                xFile: _xFile!,
+                                gender: _genderController.text.trim(),
+                                address: _addressController.text.trim(),
+                                city: _cityController.text.trim(),
+                                phoneNumber: _phoneNumberController.text.trim(),
+                                xFile: _pfp!,
+                                idCard: _idCard!,
                                 role: UserRoles.customer,
                               ),
                             );
@@ -301,7 +389,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (_nameController.text.isEmpty ||
                               _emailController.text.isEmpty ||
                               _passwordController.text.isEmpty ||
-                              _xFile == null) {
+                              _genderController.text.isEmpty ||
+                              _addressController.text.isEmpty ||
+                              _phoneNumberController.text.isEmpty ||
+                              _cityController.text.isEmpty ||
+                              _idCard == null ||
+                              _pfp == null) {
                             /* else show the snackbar saying passwords dont match */
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -326,10 +419,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           } else {
                             userBloc.add(
                               RegisterUserWithEmailAndPassword(
-                                displayName: _nameController.text.trim(),
+                                fullName: _nameController.text.trim(),
                                 email: _emailController.text.trim(),
                                 password: _passwordController.text.trim(),
-                                xFile: _xFile!,
+                                gender: _genderController.text.trim(),
+                                address: _addressController.text.trim(),
+                                city: _cityController.text.trim(),
+                                phoneNumber: _phoneNumberController.text.trim(),
+                                xFile: _pfp!,
+                                idCard: _idCard!,
                                 role: UserRoles.seller,
                               ),
                             );
@@ -435,7 +533,7 @@ two sources: Camera or Gallery */
   }
 
   /* Image Picker Utilizer */
-  void _pickImage() async {
+  void _pickImage(String dest) async {
     // Pick the Image Source
     await _pickImageSource();
 
@@ -445,7 +543,7 @@ two sources: Camera or Gallery */
       _imagePicker.pickImage(source: _imageSource!).then((value) {
         if (value != null) {
           setState(() {
-            _xFile = value;
+            dest == "idCard" ? _idCard = value : _pfp = value;
           });
         } else {
           /* Show the SnackBar telling the user that no image was selected */

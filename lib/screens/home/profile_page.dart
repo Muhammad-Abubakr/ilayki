@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/screens/home/add_menu_item.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -21,11 +20,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   ImageSource? _imageSource;
   final _imagePicker = ImagePicker();
+  late TextEditingController _nameController;
+  bool editingName = false;
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserBloc>().state.user;
-
+    _nameController = TextEditingController(text: user?.displayName);
     return BlocBuilder<ItemsBloc, ItemsState>(
       builder: (context, state) {
         return Scaffold(
@@ -55,13 +56,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   )
                                 : CircleAvatar(
-                                    backgroundColor: Theme.of(context).colorScheme.primary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
                                     radius: 204.r,
                                     child: CircleAvatar(
                                       radius: 196.r,
                                       // If the photo url of the user in not null ? show the email pfp
                                       backgroundImage:
-                                          Image.network(state.user!.photoURL!).image,
+                                          Image.network(state.user!.photoURL!)
+                                              .image,
                                     ),
                                   ),
                           ),
@@ -71,13 +74,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               margin: EdgeInsets.only(right: 16.spMax),
                               child: CircleAvatar(
                                 radius: 42.r,
-                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 child: CircleAvatar(
                                   radius: 32.r,
-                                  backgroundColor:
-                                      onlineState.onlineUsers.contains(state.user!.uid)
-                                          ? Colors.greenAccent
-                                          : Colors.redAccent,
+                                  backgroundColor: onlineState.onlineUsers
+                                          .contains(state.user!.uid)
+                                      ? Colors.greenAccent
+                                      : Colors.redAccent,
                                 ),
                               ),
                             );
@@ -87,22 +91,74 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   /* User Title */
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
-                    child: Text(
-                      // If the display name of the user is null? show placeholder name
-                      user!.displayName == null || user.displayName!.isEmpty
-                          ? AppLocalizations.of(context)!.store
-                          // else show real name
-                          : user.displayName!,
-                      // name styling / configuration
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 72.sp,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                  if (!editingName)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 16.0, bottom: 24.0),
+                          child: Text(
+                            // If the display name of the user is null? show placeholder name
+                            user!.displayName == null ||
+                                    user.displayName!.isEmpty
+                                ? AppLocalizations.of(context)!.store
+                                // else show real name
+                                : user.displayName!,
+                            // name styling / configuration
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 72.sp,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () => setState(() => editingName = true),
+                            icon: const Icon(Icons.edit)),
+                      ],
                     ),
-                  ),
+                  if (editingName) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(top: 16.0, bottom: 24.0),
+                            child: TextField(
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 68.sp,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              controller: _nameController,
+                              keyboardType: TextInputType.name,
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                                border: const UnderlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton.filled(
+                          onPressed: () {
+                            context.read<UserBloc>().add(UserNameUpdate(
+                                name: _nameController.text.trim()));
+                            setState(() => editingName = false);
+                          },
+                          icon: const Icon(Icons.done),
+                        ),
+                      ],
+                    )
+                  ],
 
                   /* User Menu Label */
                   Row(
@@ -135,7 +191,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (state.items.isEmpty)
                     Padding(
                       padding: EdgeInsets.only(top: 200.h),
-                      child: Text(AppLocalizations.of(context)!.addSomethingToShowHere),
+                      child: Text(
+                          AppLocalizations.of(context)!.addSomethingToShowHere),
                     )
                   else
                     Expanded(
@@ -204,8 +261,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-/* No Image Source was specified. This can happen when the Modal Bottom Sheet was dismissed 
-without providing the _imageSource value by tapping on either of the 
+/* No Image Source was specified. This can happen when the Modal Bottom Sheet was dismissed
+without providing the _imageSource value by tapping on either of the
 two sources: Camera or Gallery */
   bool _validateImageSource() {
     if (_imageSource == null) {
@@ -218,7 +275,8 @@ two sources: Camera or Gallery */
           actions: [
             ElevatedButton(
               child: Text(AppLocalizations.of(context)!.dismiss),
-              onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners(),
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).clearMaterialBanners(),
             )
           ],
         ),

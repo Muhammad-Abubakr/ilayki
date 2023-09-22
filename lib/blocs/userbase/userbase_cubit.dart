@@ -64,6 +64,7 @@ class UserbaseCubit extends Cubit<UserbaseState> {
       if (data != null) {
         for (var user in data.values) {
           // parse the user
+          debugPrint("$user");
           final parsedUser = User.fromJson(user.toString());
 
           users.add(parsedUser);
