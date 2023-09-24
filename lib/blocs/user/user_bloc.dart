@@ -64,10 +64,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   FutureOr<void> _subscriptionHandler(
       _UserUpdateEvent event, Emitter<UserState> emit) {
     // updates the Bloc about the change in user state from the firebase subscription
-    if (kDebugMode) {
-      print(event.user);
-    }
-
     // If the user has signed out
     if (event.user == null) {
       emit(UserUpdate(

@@ -8,12 +8,10 @@ import 'package:ilayki/screens/auth/login_screen.dart';
 
 import '../../app.dart';
 import '../../blocs/items/items_bloc.dart';
-import '../../blocs/online/online_cubit.dart';
 import '../../blocs/orders/orders_cubit.dart';
 import '../../blocs/requests/requests_cubit.dart';
 import '../../blocs/sales/sales_cubit.dart';
 import '../../blocs/userchat/userchat_cubit.dart';
-import '../../blocs/wares/wares_cubit.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   const EmailVerificationScreen({super.key});
@@ -47,12 +45,6 @@ class EmailVerificationScreen extends StatelessWidget {
             listener: (context, state) {
               switch (state.status) {
                 case EmailVerificationStatus.verified:
-                  /* Initialize the wares */
-                  context.read<WaresCubit>().intialize();
-                  /* Initialize the online users */
-                  final onlineCubit = context.read<OnlineCubit>();
-                  onlineCubit.initialize();
-                  onlineCubit.setOnline();
                   /* Initialize the requests for current user */
                   context.read<RequestsCubit>().initialize();
                   /* Initialize the orders for current user */

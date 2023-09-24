@@ -29,23 +29,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with WidgetsBindingObserver {
-  /* Blocs */
-  late UserbaseCubit userbaseCubit;
-
-  /* Hooking the app lifecyles */
+  /* Hooking the app lifecycles */
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    /* Initialize the userbase */
-    userbaseCubit = context.watch<UserbaseCubit>();
-
-    super.didChangeDependencies();
   }
 
   @override
@@ -55,7 +44,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  /* ----------------------------------- */
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -63,16 +51,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
         context.read<OnlineCubit>().setOffline();
         break;
-
       case AppLifecycleState.resumed:
         /* resume the online status */
         context.read<OnlineCubit>().setOnline();
         break;
-
       default:
-        if (kDebugMode) {
-          print(state);
-        }
         break;
     }
 
@@ -94,9 +77,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     // Localization cubit
     final LocalizationCubit cubit = context.watch<LocalizationCubit>();
+    final userbaseCubit = context.watch<UserbaseCubit>();
 
     /* Locales Dropdown */
-    debugPrint("I am here");
     final SupportedLocales dropdownValue = SupportedLocales.values.firstWhere(
       (element) => describeEnum(element) == cubit.state.locale,
     );
@@ -153,6 +136,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                     iconSize: 16.spMax,
                     elevation: 1,
                     value: dropdownValue,
+                    padding: EdgeInsets.zero,
 
                     // Update the cubit state with the locale selected by the user
                     onChanged: (value) {
@@ -160,6 +144,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                     },
                     items: [
                       DropdownMenuItem(
+                        alignment: Alignment.center,
                         value: SupportedLocales.en,
                         child: Image.asset(
                           'lib/assets/flags/us.png',
@@ -168,6 +153,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         ),
                       ),
                       DropdownMenuItem(
+                        alignment: Alignment.center,
                         value: SupportedLocales.ar,
                         child: Image.asset(
                           'lib/assets/flags/sa.png',
@@ -176,6 +162,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         ),
                       ),
                       DropdownMenuItem(
+                        alignment: Alignment.center,
                         value: SupportedLocales.fr,
                         child: Image.asset(
                           'lib/assets/flags/fr.png',

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../../models/item.dart';
 import '../../models/order.dart';
@@ -21,7 +22,8 @@ class BasketCubit extends Cubit<BasketState> {
   void addItem(Item item) {
     // Two things can happen here:
     // checking if the item is present
-    final int isPresent = state.orderItems.indexWhere((order) => order.item.id == item.id);
+    final int isPresent =
+        state.orderItems.indexWhere((order) => order.item.id == item.id);
 
     // 1- item is not present => add item with quantity one
     if (isPresent == -1) {
@@ -44,7 +46,8 @@ class BasketCubit extends Cubit<BasketState> {
       final presentState = state.orderItems[isPresent];
 
       // update the quantity
-      final updatedState = presentState.copyWith(quantity: presentState.quantity + 1);
+      final updatedState =
+          presentState.copyWith(quantity: presentState.quantity + 1);
 
       // replace the previous item
       state.orderItems.replaceRange(isPresent, isPresent + 1, [updatedState]);
@@ -86,10 +89,12 @@ class BasketCubit extends Cubit<BasketState> {
       final presentState = state.orderItems[prevStateIndex];
 
       // update the quantity
-      final updatedState = presentState.copyWith(quantity: presentState.quantity - 1);
+      final updatedState =
+          presentState.copyWith(quantity: presentState.quantity - 1);
 
       // replace the previous item
-      state.orderItems.replaceRange(prevStateIndex, prevStateIndex + 1, [updatedState]);
+      state.orderItems
+          .replaceRange(prevStateIndex, prevStateIndex + 1, [updatedState]);
       final updatedItems = [...state.orderItems];
 
       // decrease the total price
@@ -101,7 +106,8 @@ class BasketCubit extends Cubit<BasketState> {
   }
 
   /* place order */
-  void placeOrder(my_user.User seller) async {
+  void placeOrder(
+      my_user.User seller, TimeOfDay pickupTime, OrderType orderType) async {
     // create a ref at the requests in format BuyerID+SellerID
     final String buyerUID = FirebaseAuth.instance.currentUser!.uid;
 
@@ -115,6 +121,8 @@ class BasketCubit extends Cubit<BasketState> {
       refID: orderRef.path.split('/').last,
       buyerID: buyerUID,
       sellerID: seller.uid,
+      orderType: orderType,
+      pickupTime: pickupTime,
       orderItems: state.orderItems,
       totalPrice: state.totalPrice,
       time: DateTime.now(),

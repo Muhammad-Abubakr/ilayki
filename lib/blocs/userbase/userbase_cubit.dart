@@ -45,7 +45,7 @@ class UserbaseCubit extends Cubit<UserbaseState> {
       }
 
       /* emit the new state after collection */
-      debugPrint('Customers: $users');
+      debugPrint('Customers: ${users.length}');
       emit(UserbaseUpdate(
         customer: users,
         seller: state.seller ?? [],
@@ -64,14 +64,13 @@ class UserbaseCubit extends Cubit<UserbaseState> {
       if (data != null) {
         for (var user in data.values) {
           // parse the user
-          debugPrint("$user");
           final parsedUser = User.fromJson(user.toString());
 
           users.add(parsedUser);
         }
       }
       /* emit the new state after collection */
-      debugPrint('Sellers: $users');
+      debugPrint('Sellers: ${users.length}');
       emit(UserbaseUpdate(
         customer: state.customer ?? [],
         seller: users,

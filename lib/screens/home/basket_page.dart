@@ -1,14 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/blocs/userbase/userbase_cubit.dart';
+import 'package:ilayki/models/order.dart';
 import 'package:ilayki/models/orderitem.dart';
 
 import '../../blocs/basket/basket_cubit.dart';
 
-class BasketPage extends StatelessWidget {
+class BasketPage extends StatefulWidget {
   const BasketPage({super.key});
+
+  @override
+  State<BasketPage> createState() => _BasketPageState();
+}
+
+class _BasketPageState extends State<BasketPage> {
+  TimeOfDay? pickedTime;
+  DateTime? pickedDate;
+  OrderType orderType = OrderType.delivery;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +31,13 @@ class BasketPage extends StatelessWidget {
     final UserbaseCubit userbaseCubit = context.watch<UserbaseCubit>();
 
     // orientation
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return basketCubit.state.orderItems.isEmpty
         ? Center(
-            child: Text(AppLocalizations.of(context)!.nothingToShowHereForTheMoment),
+            child: Text(
+                AppLocalizations.of(context)!.nothingToShowHereForTheMoment),
           )
         : Scaffold(
             appBar: isLandscape
@@ -32,7 +45,147 @@ class BasketPage extends StatelessWidget {
                 : AppBar(
                     title: Text(AppLocalizations.of(context)!.basket),
                     centerTitle: true,
-                    leading: const Text(''),
+                    automaticallyImplyLeading: false,
+                    bottom: PreferredSize(
+                      preferredSize: Size.fromHeight(350.h),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 64.sp),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delivery_dining,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    SizedBox(
+                                      width: 20.w,
+                                    ),
+                                    Text(
+                                      "Order Type *",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.spMax),
+                                    )
+                                  ],
+                                ),
+                                DropdownButton(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12.spMax),
+                                  value: orderType,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() => orderType = value);
+                                    }
+                                  },
+                                  items: OrderType.values
+                                      .map((e) => DropdownMenuItem(
+                                          alignment: Alignment.center,
+                                          value: e,
+                                          child: Text(describeEnum(e))))
+                                      .toList(),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 32.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.access_time_filled,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    SizedBox(
+                                      width: 20.w,
+                                    ),
+                                    Text(
+                                      "Order Time * ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.spMax),
+                                    )
+                                  ],
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (_) => TimePickerDialog(
+                                        initialTime: TimeOfDay.now()),
+                                  ).then((value) =>
+                                      setState(() => pickedTime = value)),
+                                  child: Text(
+                                    pickedTime != null
+                                        ? "${pickedTime!.hour < 1 ? "00" : pickedTime!.hour}:${pickedTime?.minute} ${describeEnum(pickedTime!.period)}"
+                                        : "Pick a Time",
+                                    textDirection: TextDirection.ltr,
+                                    style: pickedTime != null
+                                        ? const TextStyle(
+                                            fontWeight: FontWeight.bold)
+                                        : null,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 32.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.date_range,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    SizedBox(
+                                      width: 20.w,
+                                    ),
+                                    Text(
+                                      "Order Date * ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.spMax),
+                                    )
+                                  ],
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (_) => DatePickerDialog(
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2023, 1),
+                                      lastDate: DateTime(2023, 12),
+                                    ),
+                                  ).then((value) =>
+                                      setState(() => pickedDate = value)),
+                                  child: Text(
+                                    pickedDate != null
+                                        ? pickedDate.toString().split(" ")[0]
+                                        : "Pick a Date",
+                                    style: pickedDate != null
+                                        ? const TextStyle(
+                                            fontWeight: FontWeight.bold)
+                                        : null,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
             body: Padding(
               padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 32.w),
@@ -60,10 +213,12 @@ class BasketPage extends StatelessWidget {
                           /* Item Image */
                           Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(24.r)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(24.r)),
                               color: Theme.of(context).primaryColor,
                               image: DecorationImage(
-                                image: Image.network(orders[index].item.image).image,
+                                image: Image.network(orders[index].item.image)
+                                    .image,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -75,13 +230,18 @@ class BasketPage extends StatelessWidget {
                             children: [
                               /* Add Item */
                               IconButton.filledTonal(
-                                onPressed: () => basketCubit.addItem(orders[index].item),
+                                onPressed: () =>
+                                    basketCubit.addItem(orders[index].item),
                                 style: ButtonStyle(
                                   alignment: Alignment.center,
-                                  padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
-                                  fixedSize: MaterialStatePropertyAll(Size.fromRadius(36.r)),
-                                  minimumSize: MaterialStatePropertyAll(Size.fromRadius(0.r)),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  padding: const MaterialStatePropertyAll(
+                                      EdgeInsets.all(0)),
+                                  fixedSize: MaterialStatePropertyAll(
+                                      Size.fromRadius(36.r)),
+                                  minimumSize: MaterialStatePropertyAll(
+                                      Size.fromRadius(0.r)),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 icon: const Icon(
                                   Icons.arrow_drop_up_rounded,
@@ -93,13 +253,18 @@ class BasketPage extends StatelessWidget {
 
                               /* Remove Item */
                               IconButton.filledTonal(
-                                onPressed: () => basketCubit.removeItem(orders[index].item),
+                                onPressed: () =>
+                                    basketCubit.removeItem(orders[index].item),
                                 style: ButtonStyle(
                                   alignment: Alignment.center,
-                                  padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
-                                  fixedSize: MaterialStatePropertyAll(Size.fromRadius(36.r)),
-                                  minimumSize: MaterialStatePropertyAll(Size.fromRadius(0.r)),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  padding: const MaterialStatePropertyAll(
+                                      EdgeInsets.all(0)),
+                                  fixedSize: MaterialStatePropertyAll(
+                                      Size.fromRadius(36.r)),
+                                  minimumSize: MaterialStatePropertyAll(
+                                      Size.fromRadius(0.r)),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 icon: const Icon(
                                   Icons.arrow_drop_down_rounded,
@@ -135,20 +300,33 @@ class BasketPage extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // place the order
-                      basketCubit.placeOrder(userbaseCubit.getUser(orders.first.item.owner));
+                    style: ElevatedButton.styleFrom(
+                      disabledBackgroundColor: Colors.grey.shade800,
+                      disabledForegroundColor: Colors.grey.shade600,
+                    ),
+                    onPressed: pickedTime == null || orderType == null
+                        ? null
+                        : () {
+                            // place the order
+                            basketCubit.placeOrder(
+                                userbaseCubit.getUser(orders.first.item.owner),
+                                pickedTime!,
+                                orderType!);
 
-                      // show the user that the request has been made to the sellers
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: Text(AppLocalizations.of(context)!.requestSent),
-                          content: Text(AppLocalizations.of(context)!.requestSentContent),
-                        ),
-                      );
-                    },
-                    child: Text(AppLocalizations.of(context)!.placeOrder),
+                            // show the user that the request has been made to the sellers
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text(
+                                    AppLocalizations.of(context)!.requestSent),
+                                content: Text(AppLocalizations.of(context)!
+                                    .requestSentContent),
+                              ),
+                            );
+                          },
+                    child: pickedTime == null || orderType == null
+                        ? const Text("Disabled")
+                        : Text(AppLocalizations.of(context)!.placeOrder),
                   )
                 ],
               ),
