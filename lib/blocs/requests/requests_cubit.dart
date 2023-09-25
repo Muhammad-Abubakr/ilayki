@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +52,6 @@ class RequestsCubit extends Cubit<RequestsState> {
                 // parse each request to Order
                 final parsedRequest = Order.fromJson(request.toString());
 
-                // print(parsedRequest);
                 // add to container
                 allRequests.add(parsedRequest);
               }
@@ -66,28 +66,57 @@ class RequestsCubit extends Cubit<RequestsState> {
 
   /* Decline Request */
   void decline(Order order) async {
-    // goal: remove the request from the requests collection in database
-    // 1- get the reference to the order
-    final orderRef =
+    final requestRef =
         _requests.child('${order.buyerID}+${order.sellerID}/${order.refID}');
+    final orderRef = FirebaseDatabase.instance
+        .ref('orders/${order.buyerID}+${order.sellerID}/${order.refID}');
+    final notificationsRef =
+        FirebaseDatabase.instance.ref('notifications/${order.buyerID}');
+    final notificationRef = notificationsRef.push();
 
-    // 2 - delete the item
-    await orderRef.remove();
+    //   Approach change from deleting to updating the status of the order
+    //   and placing it in the orders along with the requests so for that we
+    //   will need to get the order and then update the status of the order
+    final data = await requestRef.get();
+
+    if (data.value != null) {
+      final request = jsonDecode(data.value.toString());
+
+      // parse each request to Order
+      final parsedRequest = Order.fromJson(json.encode(request));
+      final updatedRequest = parsedRequest.copyWith(status: OrderStatus.denied);
+      await requestRef.set(updatedRequest.toJson());
+      await orderRef.set(updatedRequest.toJson());
+      await notificationRef.set(updatedRequest.toJson());
+    }
   }
 
   /* Accept Request */
   void accept(Order order) async {
-    // goal: remove the request from the requests collection in database
-    // and add it to confirmed orders
-    decline(order); // will remove it from requests
-
-    // now adding to confirmed orders
-    // first getting the ref to it
+    final requestRef =
+        _requests.child('${order.buyerID}+${order.sellerID}/${order.refID}');
     final orderRef = FirebaseDatabase.instance
         .ref('orders/${order.buyerID}+${order.sellerID}/${order.refID}');
+    final notificationsRef =
+        FirebaseDatabase.instance.ref('notifications/${order.buyerID}');
+    final notificationRef = notificationsRef.push();
 
-    // set the order to new reference
-    await orderRef.set(order.toJson());
+    //   Approach change from deleting to updating the status of the order
+    //   and placing it in the orders along with the requests so for that we
+    //   will need to get the order and then update the status of the order
+    final data = await requestRef.get();
+
+    if (data.value != null) {
+      final request = jsonDecode(data.value.toString());
+
+      // parse each request to Order
+      final parsedRequest = Order.fromJson(json.encode(request));
+      final updatedRequest =
+          parsedRequest.copyWith(status: OrderStatus.accepted);
+      await requestRef.set(updatedRequest.toJson());
+      await orderRef.set(updatedRequest.toJson());
+      await notificationRef.set(updatedRequest.toJson());
+    }
   }
 
   /* disposing the stream */

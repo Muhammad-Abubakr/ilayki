@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ilayki/blocs/notifications/notifications_cubit.dart';
 import 'package:ilayki/screens/auth/login_screen.dart';
 
 import 'app.dart';
@@ -61,6 +62,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
             /* Initialize the user chats */
             context.read<UserchatCubit>().intialize();
+
+            /* Initialize the user chats */
+            context.read<NotificationsCubit>().initialize();
 
             /* Fetch the Items */
             context

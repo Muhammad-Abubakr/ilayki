@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ilayki/blocs/notifications/notifications_cubit.dart';
 import 'package:ilayki/blocs/online/online_cubit.dart';
 import 'package:ilayki/blocs/orders/orders_cubit.dart';
 import 'package:ilayki/blocs/requests/requests_cubit.dart';
@@ -82,6 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
               /* Initialize the user chats */
               context.read<UserchatCubit>().intialize();
+
+              /* Initialize the user chats */
+              context.read<NotificationsCubit>().initialize();
 
               /* Fetch the Items */
               context.read<ItemsBloc>().add(

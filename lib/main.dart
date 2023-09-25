@@ -9,6 +9,7 @@ import 'package:ilayki/blocs/chat/chat_bloc.dart';
 import 'package:ilayki/blocs/email_verificaton/email_verification_cubit.dart';
 import 'package:ilayki/blocs/items/items_bloc.dart';
 import 'package:ilayki/blocs/localization/localization_cubit.dart';
+import 'package:ilayki/blocs/notifications/notifications_cubit.dart';
 import 'package:ilayki/blocs/online/online_cubit.dart';
 import 'package:ilayki/blocs/orders/orders_cubit.dart';
 import 'package:ilayki/blocs/requests/requests_cubit.dart';
@@ -57,6 +58,8 @@ void main() {
           BlocProvider<RequestsCubit>(create: (context) => RequestsCubit()),
           BlocProvider<OrdersCubit>(create: (context) => OrdersCubit()),
           BlocProvider<SalesCubit>(create: (context) => SalesCubit()),
+          BlocProvider<NotificationsCubit>(
+              create: (context) => NotificationsCubit()),
         ],
         child: const MyApp(),
       ),

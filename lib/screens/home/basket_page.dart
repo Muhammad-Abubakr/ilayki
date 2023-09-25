@@ -304,14 +304,15 @@ class _BasketPageState extends State<BasketPage> {
                       disabledBackgroundColor: Colors.grey.shade800,
                       disabledForegroundColor: Colors.grey.shade600,
                     ),
-                    onPressed: pickedTime == null || orderType == null
+                    onPressed: pickedTime == null || pickedDate == null
                         ? null
                         : () {
                             // place the order
                             basketCubit.placeOrder(
                                 userbaseCubit.getUser(orders.first.item.owner),
                                 pickedTime!,
-                                orderType!);
+                                orderType,
+                                pickedDate!);
 
                             // show the user that the request has been made to the sellers
                             showDialog(
@@ -324,7 +325,7 @@ class _BasketPageState extends State<BasketPage> {
                               ),
                             );
                           },
-                    child: pickedTime == null || orderType == null
+                    child: pickedTime == null || pickedDate == null
                         ? const Text("Disabled")
                         : Text(AppLocalizations.of(context)!.placeOrder),
                   )

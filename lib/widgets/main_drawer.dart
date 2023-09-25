@@ -10,6 +10,7 @@ import 'package:ilayki/blocs/sales/sales_cubit.dart';
 import 'package:ilayki/blocs/user/user_bloc.dart';
 
 import '../blocs/items/items_bloc.dart';
+import '../blocs/notifications/notifications_cubit.dart';
 import '../blocs/userbase/userbase_cubit.dart';
 import '../screens/drawer/orders_screen.dart';
 import '../screens/drawer/sales_screen.dart';
@@ -141,12 +142,14 @@ class MainDrawer extends StatelessWidget {
                   context
                       .read<ItemsBloc>()
                       .add(const DeactivateItemsListener());
-                  /* Dipose of the requests for the current user */
+                  /* Dispose of the requests for the current user */
                   context.read<RequestsCubit>().dispose();
-                  /* Dipose of the orders for the current user */
+                  /* Dispose of the orders for the current user */
                   context.read<OrdersCubit>().dispose();
-                  /* Dipose of the sales for the current user */
+                  /* Dispose of the sales for the current user */
                   context.read<SalesCubit>().dispose();
+                  /* Dispose of the sales for the current user */
+                  context.read<NotificationsCubit>().dispose();
 
                   /* Sign Out the User */
                   Navigator.of(context).pop();
