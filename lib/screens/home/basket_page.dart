@@ -47,7 +47,7 @@ class _BasketPageState extends State<BasketPage> {
                     centerTitle: true,
                     automaticallyImplyLeading: false,
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(350.h),
+                      preferredSize: Size.fromHeight(450.h),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 64.sp),
                         child: Column(

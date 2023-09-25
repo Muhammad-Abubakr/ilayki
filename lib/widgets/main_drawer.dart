@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ilayki/blocs/basket/basket_cubit.dart';
+import 'package:ilayki/blocs/online/online_cubit.dart';
 import 'package:ilayki/blocs/orders/orders_cubit.dart';
 import 'package:ilayki/blocs/requests/requests_cubit.dart';
 import 'package:ilayki/blocs/sales/sales_cubit.dart';
@@ -137,6 +138,9 @@ class MainDrawer extends StatelessWidget {
 
                   /* Clear the basket */
                   context.read<BasketCubit>().clear();
+
+                  // offline
+                  context.read<OnlineCubit>().setOffline();
 
                   /* This seems like a good point to unsubscribe to items stream */
                   context

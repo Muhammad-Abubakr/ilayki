@@ -24,6 +24,8 @@ class Order {
 
   String get productId => refID.substring(refID.length - 4);
   String get ownerId => sellerID.substring(sellerID.length - 4);
+  String get parsedDate => time.toString().split(" ")[0];
+  String get parsedTime => time.toString().split(" ")[1].split(".")[0];
 
   Order({
     required this.refID,

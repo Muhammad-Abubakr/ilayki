@@ -87,8 +87,8 @@ class OrdersCubit extends Cubit<OrdersState> {
 
       // parse each request to Order
       final parsedRequest = Order.fromJson(json.encode(request));
-      final updatedRequest =
-          parsedRequest.copyWith(status: OrderStatus.completed);
+      final updatedRequest = parsedRequest.copyWith(
+          status: OrderStatus.completed, time: DateTime.now());
       await requestRef.set(updatedRequest.toJson());
       await orderRef.set(updatedRequest.toJson());
       await notificationRef.set(updatedRequest.toJson());

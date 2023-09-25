@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ilayki/blocs/user/user_bloc.dart';
+import 'package:ilayki/services/firebase/auth.dart';
 
 import '../../models/item.dart';
 
@@ -29,27 +30,31 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
   /* Initializating Items State */
   FutureOr<void> _onActivatingItemsListeners(
       ActivateItemsListener event, Emitter<ItemsState> emit) async {
-    /* Attaching the Stream point */
-    _itemsStream =
-        database.child('items/${event.userBloc.state.user?.uid}').onValue.listen((event) {
-      /* Obtaining the actual data from the Snapshot */
-      final data = (event.snapshot.value as Map<dynamic, dynamic>?);
+    AuthService().subscribe.listen((user) {
+      if (user != null) {
+        /* Attaching the Stream point */
+        _itemsStream =
+            database.child('items/${user.uid}').onValue.listen((event) {
+          /* Obtaining the actual data from the Snapshot */
+          final data = (event.snapshot.value as Map<dynamic, dynamic>?);
 
-      /* Parsing the data if present*/
-      if (data != null) {
-        // declaring a list to hold the items data
-        List<Item> userItems = [];
+          /* Parsing the data if present*/
+          if (data != null) {
+            // declaring a list to hold the items data
+            List<Item> userItems = [];
 
-        for (var element in data.values) {
-          /* Parsing and making new Items from data */
-          final newItem = Item.fromJson(element.toString());
+            for (var element in data.values) {
+              /* Parsing and making new Items from data */
+              final newItem = Item.fromJson(element.toString());
 
-          // appending to the newly created list
-          userItems.add(newItem);
+              // appending to the newly created list
+              userItems.add(newItem);
 
-          /* Once all items have been added, emit the state with updated items */
-          add(_ItemsUpdateEvent(items: userItems));
-        }
+              /* Once all items have been added, emit the state with updated items */
+              add(_ItemsUpdateEvent(items: userItems));
+            }
+          }
+        });
       }
     });
   }
@@ -69,7 +74,8 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
   }
 
   /* deleting a specific object at some reference in firebase */
-  FutureOr<void> _onItemsDelete(ItemsDeleteEvent event, Emitter<ItemsState> emit) async {
+  FutureOr<void> _onItemsDelete(
+      ItemsDeleteEvent event, Emitter<ItemsState> emit) async {
     // get the reference to the object
     final itemRef = database.child('items/${event.userUID}/${event.itemFID}');
 
@@ -78,7 +84,8 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
   }
 
 /* Used Internally to update Items got throught the stream subcription to firebase database*/
-  FutureOr<void> _onItemsUpdate(_ItemsUpdateEvent event, Emitter<ItemsState> emit) {
+  FutureOr<void> _onItemsUpdate(
+      _ItemsUpdateEvent event, Emitter<ItemsState> emit) {
     // emit the updated state
     emit(ItemsUpdated(items: event.items));
   }

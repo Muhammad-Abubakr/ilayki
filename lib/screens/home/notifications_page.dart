@@ -29,17 +29,8 @@ class NotificationsPage extends StatelessWidget {
 
     // request cubit
     final RequestsCubit requestsCubit = context.watch<RequestsCubit>();
-    final requests = requestsCubit.state.requests;
 
-    // all
-    final all = [...requests, ...notifications];
-    all.sort((a, b) => a.time.compareTo(b.time));
-
-    print(all.length);
-    print(notifications.length);
-    print(requests.length);
-
-    return all.isEmpty
+    return notifications.isEmpty
         ? Center(
             child: Text(AppLocalizations.of(context)!.allCaughtUp),
           )
@@ -47,31 +38,17 @@ class NotificationsPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 16.h),
             separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
-              final notification = all[index];
+              final notification = notifications[index];
               final buyer = userbaseCubit.getUser(notification.buyerID);
 
-              return notification.status == OrderStatus.pending
-                  ? me != null && notification.ownerId != me.uid
-                      ? _buildRequestSentWidget(
-                          context,
-                          requestsCubit,
-                          buyer,
-                          notification,
-                        )
-                      : _buildAcceptanceOrDenialWidget(
-                          context,
-                          requestsCubit,
-                          buyer,
-                          notification,
-                        )
-                  : _buildOrderNotificationWidget(
-                      context,
-                      requestsCubit,
-                      buyer,
-                      notification,
-                    );
+              return _buildRequestUpdateWidget(
+                context,
+                requestsCubit,
+                buyer,
+                notification,
+              );
             },
-            itemCount: all.length,
+            itemCount: notifications.length,
           );
   }
 
@@ -87,117 +64,7 @@ class NotificationsPage extends StatelessWidget {
     return order;
   }
 
-  Widget _buildAcceptanceOrDenialWidget(
-    BuildContext context,
-    RequestsCubit requestsCubit,
-    User buyer,
-    Order request,
-  ) {
-    return ListTile(
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      /* Buyer Pfp */
-      leading: Container(
-        margin: EdgeInsets.all(6.0.h),
-        padding: EdgeInsets.all(6.0.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1.sw),
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        child: GestureDetector(
-          onTap: () => Navigator.of(context)
-              .pushNamed(ChatRoomScreen.routeName, arguments: {
-            "currentUser": request.sellerID,
-            "itemOwner": buyer,
-          }),
-          child: CircleAvatar(
-            backgroundImage:
-                Image.network(buyer.photoURL, fit: BoxFit.cover).image,
-          ),
-        ),
-      ),
-
-      /* Buyer name */
-      title: Text(
-        "Ref#${request.productId}",
-        textDirection: TextDirection.ltr,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-
-      /* Items description */
-      subtitle: Text(orderParser(context, request)),
-
-      /* trailing button to accept order */
-      trailing: SizedBox(
-        width: 0.25.sw,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () => requestsCubit.decline(request),
-              child: CircleAvatar(
-                backgroundColor: Colors.redAccent.withOpacity(0.8),
-                child: const Icon(
-                  Icons.delete_forever,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => requestsCubit.accept(request),
-              child: CircleAvatar(
-                backgroundColor: Colors.green.withOpacity(0.8),
-                child: const Icon(
-                  Icons.add_circle,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _buildOrderNotificationWidget(BuildContext context,
-      RequestsCubit requestsCubit, User buyer, Order request) {
-    return ListTile(
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      /* Buyer Pfp */
-      leading: Container(
-        margin: EdgeInsets.all(6.0.h),
-        padding: EdgeInsets.all(6.0.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1.sw),
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        child: GestureDetector(
-          onTap: () => Navigator.of(context)
-              .pushNamed(ChatRoomScreen.routeName, arguments: {
-            "currentUser": request.sellerID,
-            "itemOwner": buyer,
-          }),
-          child: CircleAvatar(
-            backgroundImage:
-                Image.network(buyer.photoURL, fit: BoxFit.cover).image,
-          ),
-        ),
-      ),
-
-      /* Buyer name */
-      title: Text(
-        "Ref#${request.productId}",
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-
-      /* Items description */
-      subtitle: Text(orderParser(context, request)),
-
-      /* trailing button to accept order */
-      trailing: Text("Status: ${describeEnum(request.status)}"),
-    );
-  }
-
-  _buildRequestSentWidget(BuildContext context, RequestsCubit requestsCubit,
+  _buildRequestUpdateWidget(BuildContext context, RequestsCubit requestsCubit,
       User buyer, Order notification) {
     return ListTile(
       visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -232,7 +99,8 @@ class NotificationsPage extends StatelessWidget {
       subtitle: Text(orderParser(context, notification)),
 
       /* trailing button to accept order */
-      trailing: Text("Status: ${describeEnum(notification.status)}"),
+      trailing: Text(
+          "Status: ${describeEnum(notification.status)} \n ${notification.parsedTime} on ${notification.parsedDate}"),
     );
   }
 }

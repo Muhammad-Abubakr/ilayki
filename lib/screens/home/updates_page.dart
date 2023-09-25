@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:ilayki/screens/chat/chats_page.dart';
 import 'package:ilayki/screens/home/notifications_page.dart';
+import 'package:ilayki/screens/home/order_requests_screen.dart';
 
 class UpdatesPage extends StatelessWidget {
   const UpdatesPage({super.key});
@@ -10,7 +10,7 @@ class UpdatesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 0,
@@ -20,6 +20,7 @@ class UpdatesPage extends StatelessWidget {
               Tab(
                   text: AppLocalizations.of(context)!.notifications,
                   icon: const Icon(Icons.notifications)),
+              const Tab(text: "Requests", icon: Icon(Icons.request_page)),
               Tab(
                 text: AppLocalizations.of(context)!.chat,
                 icon: const Icon(Icons.chat),
@@ -30,6 +31,7 @@ class UpdatesPage extends StatelessWidget {
         body: const TabBarView(
           children: [
             NotificationsPage(),
+            OrderRequestsScreen(),
             ChatsPage(),
           ],
         ),

@@ -84,7 +84,8 @@ class RequestsCubit extends Cubit<RequestsState> {
 
       // parse each request to Order
       final parsedRequest = Order.fromJson(json.encode(request));
-      final updatedRequest = parsedRequest.copyWith(status: OrderStatus.denied);
+      final updatedRequest = parsedRequest.copyWith(
+          status: OrderStatus.denied, time: DateTime.now());
       await requestRef.set(updatedRequest.toJson());
       await orderRef.set(updatedRequest.toJson());
       await notificationRef.set(updatedRequest.toJson());
@@ -111,8 +112,8 @@ class RequestsCubit extends Cubit<RequestsState> {
 
       // parse each request to Order
       final parsedRequest = Order.fromJson(json.encode(request));
-      final updatedRequest =
-          parsedRequest.copyWith(status: OrderStatus.accepted);
+      final updatedRequest = parsedRequest.copyWith(
+          status: OrderStatus.accepted, time: DateTime.now());
       await requestRef.set(updatedRequest.toJson());
       await orderRef.set(updatedRequest.toJson());
       await notificationRef.set(updatedRequest.toJson());
