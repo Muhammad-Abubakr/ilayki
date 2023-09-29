@@ -20,6 +20,12 @@
   "somethingWentWrong" : "حدث خطأ ما! يرجى المحاولة مرة أخرى بعد فترة من الزمن.",
   "backToLogin" : "العودة إلى تسجيل الدخول",
   "requests" : "الطلبات",
+  "orderType": "نوع الطلب",
+  "orderTime": "وقت الطلب",
+  "orderDate": "تاريخ الطلب",
+  "pickATime": "اختر وقتًا",
+  "pickADate": "اختر تاريخًا",
+
 
   "updates": "التحديثات",
     "@updates": {
@@ -50,9 +56,6 @@
         "description" : "الانتقال إلى شاشة المبيعات"
     },
     "aboutUs" : "معلومات عنا",
-    "@orders": {
-        "description" : "الانتقال إلى شاشة معلومات عنا"
-    },
     "contactUs" : "اتصل بنا",
     "@contactUS": {
         "description" : "الانتقال إلى شاشة اتصل بنا"

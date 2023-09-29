@@ -67,7 +67,7 @@ class _BasketPageState extends State<BasketPage> {
                                       width: 20.w,
                                     ),
                                     Text(
-                                      "Order Type *",
+                                      "${AppLocalizations.of(context)!.orderType} *",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16.spMax),
@@ -109,7 +109,7 @@ class _BasketPageState extends State<BasketPage> {
                                       width: 20.w,
                                     ),
                                     Text(
-                                      "Order Time * ",
+                                      "${AppLocalizations.of(context)!.orderTime} * ",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16.spMax),
@@ -126,7 +126,8 @@ class _BasketPageState extends State<BasketPage> {
                                   child: Text(
                                     pickedTime != null
                                         ? "${pickedTime!.hour < 1 ? "00" : pickedTime!.hour}:${pickedTime?.minute} ${describeEnum(pickedTime!.period)}"
-                                        : "Pick a Time",
+                                        : AppLocalizations.of(context)!
+                                            .pickATime,
                                     textDirection: TextDirection.ltr,
                                     style: pickedTime != null
                                         ? const TextStyle(
@@ -153,7 +154,7 @@ class _BasketPageState extends State<BasketPage> {
                                       width: 20.w,
                                     ),
                                     Text(
-                                      "Order Date * ",
+                                      "${AppLocalizations.of(context)!.orderDate} * ",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16.spMax),
@@ -173,7 +174,8 @@ class _BasketPageState extends State<BasketPage> {
                                   child: Text(
                                     pickedDate != null
                                         ? pickedDate.toString().split(" ")[0]
-                                        : "Pick a Date",
+                                        : AppLocalizations.of(context)!
+                                            .pickADate,
                                     style: pickedDate != null
                                         ? const TextStyle(
                                             fontWeight: FontWeight.bold)

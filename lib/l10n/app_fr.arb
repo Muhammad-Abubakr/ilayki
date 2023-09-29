@@ -20,6 +20,11 @@
     "somethingWentWrong" : "Quelque chose s'est mal passé ! Veuillez réessayer ultérieurement.",
     "backToLogin" : "Retour à la connexion",
     "requests" : "Demandes",
+    "orderType": "Type de commande",
+    "orderTime": "Heure de la commande",
+    "orderDate": "Date de la commande",
+    "pickATime": "Choisissez une heure",
+    "pickADate": "Choisissez une date",
 
 
     "updates": "Mises à jour",
