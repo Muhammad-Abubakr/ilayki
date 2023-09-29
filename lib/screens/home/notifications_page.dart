@@ -10,8 +10,6 @@ import 'package:ilayki/models/order.dart';
 import 'package:ilayki/models/user.dart';
 import 'package:ilayki/screens/chat/chat_room_screen.dart';
 
-import '../../blocs/user/user_bloc.dart';
-
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
@@ -21,11 +19,9 @@ class NotificationsPage extends StatelessWidget {
     final UserbaseCubit userbaseCubit = context.watch<UserbaseCubit>();
     final NotificationsCubit notificationsCubit =
         context.watch<NotificationsCubit>();
-    final notifications = notificationsCubit.state.notifications;
-
-    // User Bloc for getting current user uid
-    final UserBloc userBloc = context.watch<UserBloc>();
-    final me = userBloc.state.user;
+    var notifications = notificationsCubit.state.notifications;
+    notifications.sort((a, b) => a.time.compareTo(b.time));
+    notifications = notifications.reversed.toList();
 
     // request cubit
     final RequestsCubit requestsCubit = context.watch<RequestsCubit>();
@@ -40,11 +36,13 @@ class NotificationsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final notification = notifications[index];
               final buyer = userbaseCubit.getUser(notification.buyerID);
+              final owner = userbaseCubit.getUser(notification.ownerId);
 
               return _buildRequestUpdateWidget(
                 context,
                 requestsCubit,
                 buyer,
+                owner,
                 notification,
               );
             },
@@ -65,7 +63,7 @@ class NotificationsPage extends StatelessWidget {
   }
 
   _buildRequestUpdateWidget(BuildContext context, RequestsCubit requestsCubit,
-      User buyer, Order notification) {
+      User buyer, User owner, Order notification) {
     return ListTile(
       visualDensity: VisualDensity.adaptivePlatformDensity,
       /* Buyer Pfp */
@@ -84,7 +82,7 @@ class NotificationsPage extends StatelessWidget {
           }),
           child: CircleAvatar(
             backgroundImage:
-                Image.network(buyer.photoURL, fit: BoxFit.cover).image,
+                Image.network(owner.photoURL, fit: BoxFit.cover).image,
           ),
         ),
       ),

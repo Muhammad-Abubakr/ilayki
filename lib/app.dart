@@ -197,14 +197,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                     label: AppLocalizations.of(context)!.updates,
                     icon: BlocBuilder<RequestsCubit, RequestsState>(
                       builder: (context, state) {
-                        return Stack(children: [
-                          const Icon(Icons.notifications),
-                          if (state.requests.isNotEmpty)
-                            CircleAvatar(
-                              radius: 12.r,
-                              backgroundColor: Colors.red.shade400,
-                            ),
-                        ]);
+                        return const Icon(Icons.notifications);
                       },
                     ),
                   ),

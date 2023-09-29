@@ -9,6 +9,7 @@ import 'package:ilayki/screens/auth/email_verification_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../blocs/user/user_bloc.dart';
+import '../../models/user.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -29,10 +30,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _imagePicker = ImagePicker();
 
   // Text Field Controllers
+  City? _city;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -117,8 +118,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextField(
                     controller: _nameController,
                     keyboardType: TextInputType.name,
-                    decoration: const InputDecoration(
-                      label: Text("Full Name"),
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.fullName),
                     ),
                   ),
 
@@ -137,8 +138,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextField(
                     controller: _genderController,
                     keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                      label: Text("Gender"),
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.gender),
                     ),
                   ),
 
@@ -147,8 +148,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextField(
                     controller: _phoneNumberController,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      label: Text("Phone Number"),
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.phoneNumber),
                     ),
                   ),
 
@@ -157,19 +158,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextField(
                     controller: _addressController,
                     keyboardType: TextInputType.streetAddress,
-                    decoration: const InputDecoration(
-                      label: Text("Address"),
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.address),
                     ),
                   ),
 
                   /// city
                   SizedBox(height: 24.h),
-                  TextField(
-                    controller: _cityController,
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                      label: Text("City"),
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      label: Text(AppLocalizations.of(context)!.city),
                     ),
+                    items: cities
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    onChanged: (e) => setState(() => _city = e),
+                    value: _city,
                   ),
 
                   /// Password
@@ -200,7 +207,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 64.0.sp),
                     child: Text(
-                      "Add a Profile Picture",
+                      textAlign: TextAlign.center,
+                      AppLocalizations.of(context)!.addAProfilePicture,
                       style: TextStyle(fontSize: 64.sp),
                     ),
                   ),
@@ -261,7 +269,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 64.0.sp),
                     child: Text(
-                      "Add your ID Card Picture",
+                      AppLocalizations.of(context)!.addYourIdCardPicture,
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 64.sp),
                     ),
                   ),
@@ -336,7 +345,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _genderController.text.isEmpty ||
                               _addressController.text.isEmpty ||
                               _phoneNumberController.text.isEmpty ||
-                              _cityController.text.isEmpty ||
+                              _city == null ||
                               _idCard == null ||
                               _pfp == null) {
                             /* else show the snackbar saying passwords dont match */
@@ -368,7 +377,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 password: _passwordController.text.trim(),
                                 gender: _genderController.text.trim(),
                                 address: _addressController.text.trim(),
-                                city: _cityController.text.trim(),
+                                city: _city.toString(),
                                 phoneNumber: _phoneNumberController.text.trim(),
                                 xFile: _pfp!,
                                 idCard: _idCard!,
@@ -392,7 +401,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _genderController.text.isEmpty ||
                               _addressController.text.isEmpty ||
                               _phoneNumberController.text.isEmpty ||
-                              _cityController.text.isEmpty ||
+                              _city == null ||
                               _idCard == null ||
                               _pfp == null) {
                             /* else show the snackbar saying passwords dont match */
@@ -424,7 +433,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 password: _passwordController.text.trim(),
                                 gender: _genderController.text.trim(),
                                 address: _addressController.text.trim(),
-                                city: _cityController.text.trim(),
+                                city: _city.toString(),
                                 phoneNumber: _phoneNumberController.text.trim(),
                                 xFile: _pfp!,
                                 idCard: _idCard!,

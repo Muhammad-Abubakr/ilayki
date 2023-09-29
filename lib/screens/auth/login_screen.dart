@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -262,12 +263,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 96.h),
                   ElevatedButton(
-                    onPressed: () => context
-                        .read<UserBloc>()
-                        .add(UserSignInWithEmailAndPassword(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        )),
+                    onPressed: () {
+                      final userBloc = context.read<UserBloc>();
+                      if (FirebaseAuth.instance.currentUser != null) {
+                        userBloc.add(UserSignOut());
+                      }
+
+                      userBloc.add(UserSignInWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ));
+                    },
                     style: TextButton.styleFrom(
                       elevation: 4,
                     ),

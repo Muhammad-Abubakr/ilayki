@@ -3,7 +3,23 @@
     "@language" :{
         "description" : "This is the default language of the Application."
     },
+    "fullName" :  "Full Name",
+    "@fullName" : {
+        "description": "Full Name"
+    },
+    "gender" :  "Gender",
+    "phoneNumber" : "Phone Number",
+    "address": "Address",
+    "city": "City",
+    "addAProfilePicture": "Add a Profile Picture",
+    "addYourIdCardPicture": "Add your ID Card Picture",
     "home": "Home",
+    "anEmailSentTo": "An email has been sent to",
+    "followLinkAndVerify" : "Please follow the link for verification. Otherwise, you will not have access to the application.",
+    "confirmBeforeLogging": " Please confirm your email before logging in.",
+    "somethingWentWrong": "Something went wrong! Please try again after some time.",
+    "backToLogin": "Back to Login",
+    "requests": "Requests",
     "@home": {
         "description" : "Go to Home screen"
     },

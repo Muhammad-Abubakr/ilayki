@@ -4,7 +4,24 @@
     "@home": {
         "description" : "الانتقال إلى شاشة الرئيسية"
     },
-    "updates": "التحديثات",
+  "fullName": "الاسم الكامل",
+  "@fullName": {
+    "description": "الاسم الكامل للمستخدم"
+  },
+  "gender": "الجنس",
+  "phoneNumber": "رقم الهاتف",
+  "address": "العنوان",
+  "city": "مدينة",
+  "addAProfilePicture": "أضف صورة ملف تعريف",
+  "addYourIdCardPicture": "أضف صورة بطاقة الهوية الخاصة بك",
+  "anEmailSentTo" : "تم إرسال بريد إلكتروني إلى",
+  "followLinkAndVerify" : "يرجى متابعة الرابط للتحقق. وإلا، لن تكون لديك وصول إلى التطبيق.",
+  "confirmBeforeLogging" : "الرجاء تأكيد عنوان بريدك الإلكتروني قبل تسجيل الدخول.",
+  "somethingWentWrong" : "حدث خطأ ما! يرجى المحاولة مرة أخرى بعد فترة من الزمن.",
+  "backToLogin" : "العودة إلى تسجيل الدخول",
+  "requests" : "الطلبات",
+
+  "updates": "التحديثات",
     "@updates": {
         "description" : "الانتقال إلى شاشة التحديثات"
     },

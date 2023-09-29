@@ -203,12 +203,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       }
 
       // In case of error while registering on Signing in
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       emit(UserUpdate(state: UserStates.error, error: e));
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
     }
   }
 

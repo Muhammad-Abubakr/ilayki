@@ -4,6 +4,68 @@ import 'package:flutter/foundation.dart';
 
 import '../blocs/user/user_bloc.dart';
 
+typedef City = String;
+List<City> cities = <String>[
+  "Adrar",
+  "Chlef",
+  "Laghouat",
+  "Oum El Bouaghi",
+  "Batna",
+  "Bejaia",
+  "Biskra",
+  "Bechar",
+  "Blida",
+  "Bouira",
+  "Tamanrasset",
+  "Tebessa",
+  "Tlemcen",
+  "Tiaret",
+  "Tizi Ouazou",
+  "Alger",
+  "Djelfa",
+  "Jijel",
+  "Setif",
+  "Saida",
+  "Skikda",
+  "Sidi Bel Abbes",
+  "Annaba",
+  "Guelma",
+  "constantine",
+  "Medea",
+  "Mostaganem",
+  "M'Sila",
+  "Mascara",
+  "Ouargla",
+  "Oran",
+  "El Bayadh",
+  "Illizi",
+  "Bordj Bou Arreridj",
+  "Boumerdes",
+  "El Taref",
+  "Tindouf",
+  "Tissemsilt",
+  "El Oued",
+  "Khenchela",
+  "Souk Ahras",
+  "Tipaza",
+  "Mila",
+  "Ain Defla",
+  "Naama",
+  "Ain Temouchent",
+  "Ghardaia",
+  "Relizane",
+  "Timimoun",
+  "Bordj Badji Mokhtar",
+  "Ouled Djellal",
+  "Beni Abbes",
+  "In Salah",
+  "In Guezzam",
+  "Touggourt",
+  "Djanet",
+  "El M'Ghair",
+  "El Meniaa",
+];
+
 class User {
   /* Attributes */
   final String fullName;
@@ -11,7 +73,7 @@ class User {
   final String phoneNumber;
   final String idCard;
   final String address;
-  final String city;
+  final City city;
   final String gender;
   final String uid;
   final UserRoles role;

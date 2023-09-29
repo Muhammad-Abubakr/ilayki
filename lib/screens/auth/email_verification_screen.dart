@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/blocs/email_verificaton/email_verification_cubit.dart';
 import 'package:ilayki/blocs/user/user_bloc.dart';
@@ -28,14 +29,14 @@ class EmailVerificationScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Something went wrong! Please try again after some time.",
+                  Text(
+                    AppLocalizations.of(context)!.somethingWentWrong,
                     textAlign: TextAlign.center,
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context)
                         .pushReplacementNamed(LoginScreen.routeName),
-                    child: const Text("back to Login"),
+                    child: Text(AppLocalizations.of(context)!.backToLogin),
                   )
                 ],
               ),
@@ -82,24 +83,18 @@ class EmailVerificationScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "An email has been sent to ${user.email}."
-                          " Please follow the link for verification."
-                          " Otherwise, you will not have access to the application.",
+                          "${AppLocalizations.of(context)!.anEmailSentTo} ${AppLocalizations.of(context)!.followLinkAndVerify}",
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 42.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                                "Please confirm your email before logging in."),
-                            TextButton(
-                                onPressed: () => Navigator.of(context)
-                                    .pushReplacementNamed(
-                                        LoginScreen.routeName),
-                                child: const Text("Log in"))
-                          ],
+                        Text(
+                          AppLocalizations.of(context)!.confirmBeforeLogging,
+                          textAlign: TextAlign.center,
                         ),
+                        TextButton(
+                            onPressed: () => Navigator.of(context)
+                                .pushReplacementNamed(LoginScreen.routeName),
+                            child: Text(AppLocalizations.of(context)!.signIn)),
                       ],
                     ),
                   ),

@@ -18,7 +18,9 @@ class OrderRequestsScreen extends StatelessWidget {
     //  cubits
     final UserbaseCubit userbaseCubit = context.watch<UserbaseCubit>();
     final RequestsCubit requestsCubit = context.watch<RequestsCubit>();
-    final requests = requestsCubit.state.requests;
+    var requests = requestsCubit.state.requests;
+    requests.sort((a, b) => a.time.compareTo(b.time));
+    requests = requests.reversed.toList();
 
     return requests.isEmpty
         ? Center(
@@ -85,7 +87,6 @@ Widget _buildAcceptanceOrDenialWidget(
     /* Buyer name */
     title: Text(
       "Ref#${request.productId}",
-      textDirection: TextDirection.ltr,
       style: const TextStyle(fontWeight: FontWeight.w600),
     ),
 
