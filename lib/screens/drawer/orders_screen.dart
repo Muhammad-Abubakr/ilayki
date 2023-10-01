@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/blocs/orders/orders_cubit.dart';
+import 'package:ilayki/screens/home/order_rating_screen.dart';
 
 import '../../blocs/userbase/userbase_cubit.dart';
 import '../../models/order.dart';
@@ -73,8 +74,7 @@ class OrdersScreen extends StatelessWidget {
                     ),
 
                     /* Buyer name */
-                    title: Text("Ref#${orders[index].productId}",
-                        textDirection: TextDirection.ltr),
+                    title: Text("Ref#${orders[index].productId}"),
 
                     /* Items description */
                     subtitle: Text(orderParser(context, orders[index])),
@@ -132,7 +132,11 @@ class OrdersScreen extends StatelessWidget {
                                 ),
                               if (orders[index].status == OrderStatus.completed)
                                 InkWell(
-                                  onTap: () => {},
+                                  onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            const OrderRatingsScreen()),
+                                  ),
                                   child: Card(
                                     elevation: 4,
                                     color:

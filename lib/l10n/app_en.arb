@@ -20,6 +20,8 @@
     "somethingWentWrong": "Something went wrong! Please try again after some time.",
     "backToLogin": "Back to Login",
     "requests": "Requests",
+    "rateYourOrder": "Rate Your Order",
+    "rating": "Rating",
     "orderType": "Order Type",
     "orderTime": "Order Time",
     "orderDate": "Order Date",
