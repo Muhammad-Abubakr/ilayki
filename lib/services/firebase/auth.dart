@@ -5,6 +5,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<User?> get subscribe => _auth.authStateChanges();
+  User? get currentUser => _auth.currentUser;
   bool? get isEmailVerified => _auth.currentUser?.emailVerified;
 
   /* Send email verification link to the user */

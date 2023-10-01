@@ -5,10 +5,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/blocs/user/user_bloc.dart';
-
 import 'package:image_picker/image_picker.dart';
 
 import '../../models/item.dart';
@@ -171,15 +170,23 @@ class _AddMenuItemScreenState extends State<AddMenuItemScreen> {
               /* Container */
               child: Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.all(4.spMax),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(24.r)),
-                  color: Theme.of(context).primaryColor.withOpacity(0.3),
-                ),
-                padding: const EdgeInsets.all(1),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(24.r)),
+                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    image: _xFile != null
+                        ? DecorationImage(
+                            fit: BoxFit.cover,
+                            image: Image(
+                              image: FileImage(File(_xFile!.path)),
+                              fit: BoxFit.cover,
+                            ).image,
+                          )
+                        : null),
                 width: 128.spMax,
                 height: 128.spMax,
                 /* Picture Update */
@@ -188,13 +195,7 @@ class _AddMenuItemScreenState extends State<AddMenuItemScreen> {
                         AppLocalizations.of(context)!.tapHereToAddPicture,
                         textAlign: TextAlign.center,
                       )
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(24.r),
-                        child: Image(
-                          image: FileImage(File(_xFile!.path)),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
+                    : null,
               ),
             ),
             /* Hint for Changing image after Selection */
@@ -260,7 +261,8 @@ two sources: Camera or Gallery */
           actions: [
             ElevatedButton(
               child: Text(AppLocalizations.of(context)!.dismiss),
-              onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners(),
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).clearMaterialBanners(),
             )
           ],
         ),

@@ -77,6 +77,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void didChangeDependencies() {
+    /* Dispose of the userbase */
+    context.read<UserbaseCubit>().initialize();
+    /* Dispose of the wares */
+    context.read<WaresCubit>().intialize();
+    /* Dispose of the wares */
+    context.read<OnlineCubit>().initialize();
+    // set the user status to be offline
+    context.read<OnlineCubit>().setOnline();
+
     super.didChangeDependencies();
   }
 

@@ -9,6 +9,7 @@ import 'package:ilayki/blocs/userbase/userbase_cubit.dart';
 import 'package:ilayki/models/order.dart';
 import 'package:ilayki/models/user.dart';
 import 'package:ilayki/screens/chat/chat_room_screen.dart';
+import 'package:ilayki/services/firebase/auth.dart';
 
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
@@ -19,7 +20,7 @@ class NotificationsPage extends StatelessWidget {
     final UserbaseCubit userbaseCubit = context.watch<UserbaseCubit>();
     final NotificationsCubit notificationsCubit =
         context.watch<NotificationsCubit>();
-    var notifications = notificationsCubit.state.notifications;
+    List<Order> notifications = notificationsCubit.state.notifications;
     notifications.sort((a, b) => a.time.compareTo(b.time));
     notifications = notifications.reversed.toList();
 
@@ -36,7 +37,7 @@ class NotificationsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final notification = notifications[index];
               final buyer = userbaseCubit.getUser(notification.buyerID);
-              final owner = userbaseCubit.getUser(notification.ownerId);
+              final owner = userbaseCubit.getUser(notification.sellerID);
 
               return _buildRequestUpdateWidget(
                 context,
@@ -77,12 +78,17 @@ class NotificationsPage extends StatelessWidget {
         child: GestureDetector(
           onTap: () => Navigator.of(context)
               .pushNamed(ChatRoomScreen.routeName, arguments: {
-            "currentUser": notification.sellerID,
-            "itemOwner": buyer,
+            "currentUser": AuthService().currentUser!.uid,
+            "itemOwner":
+                buyer.uid == AuthService().currentUser!.uid ? owner : buyer,
           }),
           child: CircleAvatar(
-            backgroundImage:
-                Image.network(owner.photoURL, fit: BoxFit.cover).image,
+            backgroundImage: Image.network(
+                    buyer.uid == AuthService().currentUser!.uid
+                        ? owner.photoURL
+                        : buyer.photoURL,
+                    fit: BoxFit.cover)
+                .image,
           ),
         ),
       ),
