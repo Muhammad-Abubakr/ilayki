@@ -11,22 +11,33 @@ import 'package:ilayki/models/user.dart';
 import 'package:ilayki/screens/chat/chat_room_screen.dart';
 import 'package:ilayki/services/firebase/auth.dart';
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // userbase cubit
-    final UserbaseCubit userbaseCubit = context.watch<UserbaseCubit>();
-    final NotificationsCubit notificationsCubit =
-        context.watch<NotificationsCubit>();
-    List<Order> notifications = notificationsCubit.state.notifications;
+  State<NotificationsPage> createState() => _NotificationsPageState();
+}
+
+class _NotificationsPageState extends State<NotificationsPage> {
+  late UserbaseCubit userbaseCubit;
+  late NotificationsCubit notificationsCubit;
+  late RequestsCubit requestsCubit;
+  List<Order> notifications = List.empty(growable: true);
+
+  @override
+  void didChangeDependencies() {
+    userbaseCubit = context.watch<UserbaseCubit>();
+    notificationsCubit = context.watch<NotificationsCubit>();
+    requestsCubit = context.watch<RequestsCubit>();
+    notifications = notificationsCubit.state.notifications;
     notifications.sort((a, b) => a.time.compareTo(b.time));
     notifications = notifications.reversed.toList();
 
-    // request cubit
-    final RequestsCubit requestsCubit = context.watch<RequestsCubit>();
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return notifications.isEmpty
         ? Center(
             child: Text(AppLocalizations.of(context)!.allCaughtUp),

@@ -86,6 +86,7 @@ class _AddMenuItemScreenState extends State<AddMenuItemScreen> {
                       name: _itemNameController.text,
                       price: double.parse(_itemPriceController.text),
                       description: _itemDescController.text,
+                      ratingCount: 0,
                       image: await imageRef
                           .getDownloadURL(), // arrives ones we upload the picture to the storage
                     ).toJson());

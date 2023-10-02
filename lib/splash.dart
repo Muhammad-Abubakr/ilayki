@@ -34,6 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
     context.read<WaresCubit>().intialize();
     /* Initialize the userbase */
     context.read<UserbaseCubit>().initialize();
+    /* Fetch the Items */
+    context.read<ItemsBloc>().add(const ActivateItemsListener());
     /* Initialize the online users */
     onlineCubit = context.read<OnlineCubit>();
     onlineCubit.initialize();
@@ -65,11 +67,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
             /* Initialize the user chats */
             context.read<NotificationsCubit>().initialize();
-
-            /* Fetch the Items */
-            context
-                .read<ItemsBloc>()
-                .add(ActivateItemsListener(userBloc: context.read<UserBloc>()));
 
             Future.delayed(
               const Duration(seconds: 3),

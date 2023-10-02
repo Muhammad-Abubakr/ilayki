@@ -47,6 +47,9 @@ class OrdersScreen extends StatelessWidget {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   final seller = userbaseCubit.getUser(orders[index].sellerID);
+                  final isNotRated = orders[index]
+                      .orderItems
+                      .any((element) => element.item.rating == null);
 
                   return ListTile(
                     visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -130,12 +133,15 @@ class OrdersScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              if (orders[index].status == OrderStatus.completed)
+                              if (orders[index].status ==
+                                      OrderStatus.completed &&
+                                  isNotRated)
                                 InkWell(
                                   onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (_) =>
-                                            const OrderRatingsScreen()),
+                                        builder: (_) => OrderRatingsScreen(
+                                            owner: seller.uid,
+                                            items: orders[index].orderItems)),
                                   ),
                                   child: Card(
                                     elevation: 4,

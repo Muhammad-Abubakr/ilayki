@@ -9,6 +9,7 @@ class Item {
   final String owner;
   final String description;
   final double? rating;
+  final int ratingCount;
   final String image;
 
   // Constructor
@@ -19,6 +20,7 @@ class Item {
     required this.price,
     required this.description,
     required this.image,
+    required this.ratingCount,
     this.rating,
   });
 
@@ -32,6 +34,7 @@ class Item {
       'description': description,
       'image': image,
       'rating': rating,
+      'ratingCount': ratingCount,
     };
   }
 
@@ -43,7 +46,8 @@ class Item {
       owner: map['owner'] as String,
       description: map['description'] as String,
       image: map['image'] as String,
-      rating: map['rating'] as double,
+      rating: map['rating'] as double?,
+      ratingCount: map['ratingCount'] as int,
     );
   }
 
@@ -63,6 +67,7 @@ class Item {
           owner == other.owner &&
           description == other.description &&
           rating == other.rating &&
+          ratingCount == other.ratingCount &&
           image == other.image;
 
   @override
@@ -73,5 +78,28 @@ class Item {
       owner.hashCode ^
       description.hashCode ^
       rating.hashCode ^
+      ratingCount.hashCode ^
       image.hashCode;
+
+  Item copyWith({
+    String? id,
+    String? name,
+    double? price,
+    String? owner,
+    String? description,
+    double? rating,
+    int? ratingCount,
+    String? image,
+  }) {
+    return Item(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      owner: owner ?? this.owner,
+      description: description ?? this.description,
+      rating: rating ?? this.rating,
+      ratingCount: ratingCount ?? this.ratingCount,
+      image: image ?? this.image,
+    );
+  }
 }

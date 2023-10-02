@@ -8,7 +8,6 @@ import 'package:ilayki/blocs/user/user_bloc.dart';
 import 'package:ilayki/screens/auth/login_screen.dart';
 
 import '../../app.dart';
-import '../../blocs/items/items_bloc.dart';
 import '../../blocs/orders/orders_cubit.dart';
 import '../../blocs/requests/requests_cubit.dart';
 import '../../blocs/sales/sales_cubit.dart';
@@ -54,9 +53,6 @@ class EmailVerificationScreen extends StatelessWidget {
                   context.read<SalesCubit>().initialize();
                   /* Initialize the user chats */
                   context.read<UserchatCubit>().intialize();
-                  /* Fetch the Items */
-                  context.read<ItemsBloc>().add(ActivateItemsListener(
-                      userBloc: context.read<UserBloc>()));
 
                   // Pop the progress indicator
                   Navigator.of(context).pop();

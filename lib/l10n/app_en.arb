@@ -22,6 +22,7 @@
     "requests": "Requests",
     "rateYourOrder": "Rate Your Order",
     "rating": "Rating",
+    "noRating": "No Rating",
     "orderType": "Order Type",
     "orderTime": "Order Time",
     "orderDate": "Order Date",

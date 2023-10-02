@@ -100,6 +100,8 @@ class _MyAppState extends State<MyApp> {
     context.read<OnlineCubit>().dispose();
     // set the user status to be offline
     context.read<OnlineCubit>().setOffline();
+    /* Dispose Items Listener */
+    context.read<ItemsBloc>().add(const DeactivateItemsListener());
 
     super.deactivate();
   }

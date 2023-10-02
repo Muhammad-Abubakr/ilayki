@@ -10,7 +10,6 @@ import 'package:ilayki/blocs/requests/requests_cubit.dart';
 import 'package:ilayki/blocs/sales/sales_cubit.dart';
 import 'package:ilayki/blocs/user/user_bloc.dart';
 
-import '../blocs/items/items_bloc.dart';
 import '../blocs/notifications/notifications_cubit.dart';
 import '../blocs/userbase/userbase_cubit.dart';
 import '../screens/drawer/orders_screen.dart';
@@ -142,10 +141,6 @@ class MainDrawer extends StatelessWidget {
                   // offline
                   context.read<OnlineCubit>().setOffline();
 
-                  /* This seems like a good point to unsubscribe to items stream */
-                  context
-                      .read<ItemsBloc>()
-                      .add(const DeactivateItemsListener());
                   /* Dispose of the requests for the current user */
                   context.read<RequestsCubit>().dispose();
                   /* Dispose of the orders for the current user */

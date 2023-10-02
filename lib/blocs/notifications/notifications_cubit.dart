@@ -16,7 +16,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   /* Streams Subscription */
   late StreamSubscription _stream;
 
-  NotificationsCubit() : super(const NotificationsInitial([]));
+  NotificationsCubit()
+      : super(NotificationsInitial(List.empty(growable: true)));
 
   /* initialize */
   void initialize() {

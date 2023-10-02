@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/blocs/basket/basket_cubit.dart';
 import 'package:ilayki/blocs/online/online_cubit.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/item.dart';
 import '../models/user.dart';
@@ -13,7 +13,8 @@ class ItemOverview extends StatelessWidget {
   final User owner;
   final int idx;
 
-  const ItemOverview({super.key, required this.idx, required this.item, required this.owner});
+  const ItemOverview(
+      {super.key, required this.idx, required this.item, required this.owner});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,27 @@ class ItemOverview extends StatelessWidget {
             ),
 
             // item name as title
-            title: Text(item.name),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(item.name),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      size: 16.spMax,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text(
+                      "${item.rating ?? AppLocalizations.of(context)!.noRating} (${item.ratingCount})",
+                      style: TextStyle(
+                        fontSize: 14.spMax,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
 
             // item price as subtitle
             subtitle: Text(

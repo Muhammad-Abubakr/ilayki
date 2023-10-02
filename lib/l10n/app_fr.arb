@@ -22,6 +22,8 @@
     "requests" : "Demandes",
     "rateYourOrder": "Évaluez votre commande",
     "rating": "Évaluation",
+    "noRating": "Pas d'évaluation",
+
     "orderType": "Type de commande",
     "orderTime": "Heure de la commande",
     "orderDate": "Date de la commande",

@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ilayki/blocs/user/user_bloc.dart';
 import 'package:ilayki/services/firebase/auth.dart';
 
 import '../../models/item.dart';
@@ -23,6 +21,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     /* Handlers */
     on<ActivateItemsListener>(_onActivatingItemsListeners);
     on<DeactivateItemsListener>(_onDeactivateItemsListener);
+    on<UpdateItemRating>(_onUpdateItemRating);
     on<ItemsDeleteEvent>(_onItemsDelete);
     on<_ItemsUpdateEvent>(_onItemsUpdate);
   }
@@ -88,5 +87,33 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
       _ItemsUpdateEvent event, Emitter<ItemsState> emit) {
     // emit the updated state
     emit(ItemsUpdated(items: event.items));
+  }
+
+  FutureOr<void> _onUpdateItemRating(
+      UpdateItemRating event, Emitter<ItemsState> emit) async {
+    // get the reference to the object
+    final itemRef = database.child('items/${event.ownerUid}/${event.itemId}');
+
+    //   get the item
+    final snapshot = await itemRef.get();
+
+    if (snapshot.value != null) {
+      final item = Item.fromJson(snapshot.value.toString());
+      final prevRating = item.rating;
+      final prevRatingCount = item.ratingCount;
+
+      final newRatingCount = prevRatingCount + 1;
+      final newRating = prevRatingCount == 0
+          ? event.rating
+          : (((prevRatingCount * prevRating!) + event.rating) / newRatingCount)
+              .toStringAsFixed(1);
+
+      final updatedItem = item.copyWith(
+        rating: double.parse(newRating.toString()),
+        ratingCount: newRatingCount,
+      );
+
+      await itemRef.set(updatedItem.toJson());
+    }
   }
 }

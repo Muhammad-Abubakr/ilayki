@@ -10,18 +10,31 @@ import '../../models/order.dart';
 import '../../models/user.dart';
 import '../chat/chat_room_screen.dart';
 
-class OrderRequestsScreen extends StatelessWidget {
+class OrderRequestsScreen extends StatefulWidget {
   const OrderRequestsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    //  cubits
-    final UserbaseCubit userbaseCubit = context.watch<UserbaseCubit>();
-    final RequestsCubit requestsCubit = context.watch<RequestsCubit>();
-    var requests = requestsCubit.state.requests;
+  State<OrderRequestsScreen> createState() => _OrderRequestsScreenState();
+}
+
+class _OrderRequestsScreenState extends State<OrderRequestsScreen> {
+  late UserbaseCubit userbaseCubit;
+  late RequestsCubit requestsCubit;
+  List<Order> requests = List.empty(growable: true);
+
+  @override
+  void didChangeDependencies() {
+    userbaseCubit = context.watch<UserbaseCubit>();
+    requestsCubit = context.watch<RequestsCubit>();
+    requests = requestsCubit.state.requests;
     requests.sort((a, b) => a.time.compareTo(b.time));
     requests = requests.reversed.toList();
 
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return requests.isEmpty
         ? Center(
             child: Text(AppLocalizations.of(context)!.allCaughtUp),

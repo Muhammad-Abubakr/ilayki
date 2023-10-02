@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ilayki/blocs/items/items_bloc.dart';
 import 'package:ilayki/blocs/user/user_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/item.dart';
 
@@ -94,7 +94,21 @@ class ItemWidget extends StatelessWidget {
               ],
             ),
             /* Price Text */
-            Text('\$${item.price}'),
+            Column(
+              children: [
+                Text('\$${item.price}'),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Text(
+                        "${item.rating ?? AppLocalizations.of(context)!.noRating} (${item.ratingCount})")
+                  ],
+                )
+              ],
+            ),
           ],
         ),
       ),

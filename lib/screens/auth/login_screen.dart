@@ -19,7 +19,6 @@ import 'package:ilayki/screens/auth/register_screen.dart';
 
 import '../../app.dart';
 import '../../blocs/email_verificaton/email_verification_cubit.dart';
-import '../../blocs/items/items_bloc.dart';
 import '../../blocs/localization/localization_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -87,10 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
               /* Initialize the user chats */
               context.read<NotificationsCubit>().initialize();
-
-              /* Fetch the Items */
-              context.read<ItemsBloc>().add(
-                  ActivateItemsListener(userBloc: context.read<UserBloc>()));
 
               // Pop the progress indicator
               Navigator.of(context).popUntil((route) => route.isCurrent);
